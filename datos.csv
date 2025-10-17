@@ -1,0 +1,11 @@
+codigo,nombre,precio,stock,stock_minimo
+A1-001,Pastillas,1.0,50,10
+B1-010,Coca Cola,6.0,24,6 
+C2-200,Chocolate,14.0,25,6
+D3-015,Papas Fritas,3.0,40,8
+E4-100,Galletas,4.0,30,6
+F5-200,Jugo De Naranja,5.0,20,4
+G6-050,Chicles Grosso,1.0,50,10
+H7-300,Sandwich,7.0,8,2
+I8-400,Cafe,7.0,15,5
+J9-500,Agua 500ml,5.0,50,8
