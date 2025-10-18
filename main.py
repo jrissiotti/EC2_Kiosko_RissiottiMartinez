@@ -1,6 +1,6 @@
 # TODO: Importar módulos cuando estén listos
 from inventario import agregar_producto, eliminar_producto, modificar_producto, reabastecer_stock, mostrar_productos
-# from reportes import *
+from reportes import top_3_vendidos, productos_stock_bajo, ventas_por_franja_horaria, resumen_semanal, ticket_promedio
 # from busquedas_ordenamientos import *
 from io_archivos import cargar_desde_csv, guardar_en_csv, exportar_alertas
 
@@ -43,35 +43,76 @@ def gestion_inventario(productos):
 
 def registrar_venta(productos):
     print("\nREGISTRAR VENTA")
-    # TODO: Implementar lógica de venta
-    # TODO: Mostrar lista de productos
-    # TODO: Seleccionar producto y cantidad
-    # TODO: Validar stock disponible
-    # TODO: Actualizar stock y vendidos_hoy
-    # TODO: Calcular total y mostrar ticket
-
+    # Mostrar productos disponibles
+    print("\nPRODUCTOS DISPONIBLES:")
+    print("-" * 60)
+    for i, producto in enumerate(productos, 1):
+        print(f"{i}. {producto['nombre']} - Bs{producto['precio']} - Stock: {producto['stock']}")
+    print("-" * 60)
+    
+    try:
+        # Seleccionar producto
+        opcion = int(input("\nSeleccione el número del producto: ")) - 1
+        
+        if opcion < 0 or opcion >= len(productos):
+            print("Opción inválida")
+            return productos
+        
+        producto = productos[opcion]
+        
+        # Pedir cantidad
+        cantidad = int(input(f"Cantidad de '{producto['nombre']}' a vender: "))
+        
+        # Validar stock
+        if cantidad <= 0:
+            print("La cantidad debe ser mayor a 0")
+            return productos
+        
+        if cantidad > producto['stock']:
+            print(f"Stock insuficiente. Solo hay {producto['stock']} unidades")
+            return productos
+        
+        # Procesar venta
+        producto['stock'] -= cantidad
+        producto['vendidos_hoy'] += cantidad
+        
+        total = cantidad * producto['precio']
+        
+        # Mostrar ticket
+        print("\nTICKET DE VENTA:")
+        print("=" * 30)
+        print(f"Producto: {producto['nombre']}")
+        print(f"Cantidad: {cantidad}")
+        print(f"Precio unitario: Bs{producto['precio']}")
+        print(f"TOTAL: Bs{total:.2f}")
+        print("=" * 30)
+        print("Venta registrada exitosamente")
+        
+    except ValueError:
+        print("Error: Debe ingresar números válidos")
+    
+    return productos
 def mostrar_reportes(productos):
     print("\n REPORTES Y ESTADÍSTICAS")
-    print("1. Productos vendidos el día de hoy")
+    print("1. Top 3 productos más vendidos del día")
     print("2. Productos con stock bajo")
-    print("3. Ventas por franja horaria") # Reporte de matriz 2D: ventas por franjas (mañana/tarde/noche)
+    print("3. Ventas por franja horaria")
     print("4. Resumen semanal")
-    print("5. Volver al menú principal")
+    print("5. Ticket promedio del día")  # ← NUEVA OPCIÓN
+    print("6. Volver al menú principal")
     opcion = input("Seleccione una opción: ")
     
     if opcion == "1":
-        # TODO: Llamar a función vendidos_hoy()
-        print("Productos vendidos hoy...")
+        top_3_vendidos(productos)
     elif opcion == "2":
-        # TODO: Llamar a función productos_stock_bajo()
-        print("Productos stock bajo...")
+        productos_stock_bajo(productos)
     elif opcion == "3":
-        # TODO: Llamar a función ventas_por_franja_horaria()
-        print("Ventas por franja horaria...")
+        ventas_por_franja_horaria()
     elif opcion == "4":
-        # TODO: Llamar a función resumen_semanal()
-        print("Resumen semanal...")
-    elif opcion == "5":
+        resumen_semanal()
+    elif opcion == "5":  # ← NUEVA OPCIÓN
+        ticket_promedio(productos)
+    elif opcion == "6":
         return
     else:
         print("Opción inválida")
