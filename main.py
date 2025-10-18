@@ -1,7 +1,7 @@
 # TODO: Importar módulos cuando estén listos
 from inventario import agregar_producto, eliminar_producto, modificar_producto, reabastecer_stock, mostrar_productos
 from reportes import top_3_vendidos, productos_stock_bajo, ventas_por_franja_horaria, resumen_semanal, ticket_promedio
-# from busquedas_ordenamientos import *
+from busquedas_ordenamientos import buscar_por_nombre, buscar_por_codigo, ordenar_por_precio, ordenar_por_nombre, ordenar_por_stock
 from io_archivos import cargar_desde_csv, guardar_en_csv, exportar_alertas
 
 def mostrar_menu_principal():
@@ -128,20 +128,17 @@ def busquedas_ordenamientos(productos):
     opcion = input("Seleccione una opción: ")
     
     if opcion == "1":
-        # TODO: Llamar a función buscar_por_nombre()
-        print("Búsqueda por nombre...")
+        nombre = input("Ingrese el nombre a buscar: ")
+        buscar_por_nombre(productos, nombre)
     elif opcion == "2":
-        # TODO: Llamar a función buscar_por_codigo()
-        print("Búsqueda por código...")
+        codigo = input("Ingrese el código a buscar: ")
+        buscar_por_codigo(productos, codigo)
     elif opcion == "3":
-        # TODO: Llamar a función ordenar_por_precio()
-        print("Ordenar por precio...")
+        ordenar_por_precio(productos)
     elif opcion == "4":
-        # TODO: Llamar a función ordenar_por_nombre()
-        print("Ordenar por nombre...")
+        ordenar_por_nombre(productos)
     elif opcion == "5":
-        # TODO: Llamar a función ordenar_por_stock()
-        print("Ordenar por stock...")
+        ordenar_por_stock(productos)
     elif opcion == "6":
         return
     else:
