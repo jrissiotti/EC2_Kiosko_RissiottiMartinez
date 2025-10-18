@@ -1,5 +1,5 @@
 # TODO: Importar módulos cuando estén listos
-# from inventario import *
+from inventario import agregar_producto, eliminar_producto, modificar_producto, reabastecer_stock, mostrar_productos
 # from reportes import *
 # from busquedas_ordenamientos import *
 from io_archivos import cargar_desde_csv, guardar_en_csv, exportar_alertas
@@ -20,25 +20,26 @@ def gestion_inventario(productos):
     print("2. Eliminar producto")
     print("3. Modificar producto")
     print("4. Reabastecer stock")
-    print("5. Volver al menú principal")
-    opcion = input("\nSeleccione una opción(1-5): ")
+    print("5. Mostrar todos los productos")
+    print("6. Volver al menú principal")
+    opcion = input("\nSeleccione una opción(1-6): ")
     
     if opcion == "1":
-        # TODO: Llamar a función agregar_producto()
-        print("Agregar producto...")
+        productos = agregar_producto(productos)
     elif opcion == "2":
-        # TODO: Llamar a función eliminar_producto()
-        print("Eliminar producto...")
+        productos = eliminar_producto(productos)
     elif opcion == "3":
-        # TODO: Llamar a función modificar_producto()
-        print("Modificar producto...")
+        productos = modificar_producto(productos)
     elif opcion == "4":
-        # TODO: Llamar a función reabastecer_stock()
-        print("Reabastecer stock...")
+        productos = reabastecer_stock(productos)
     elif opcion == "5":
-        return
+        mostrar_productos(productos)
+    elif opcion == "6":
+        return productos
     else:
         print("Opción inválida")
+    
+    return productos  # para devolver los productos actualizados
 
 def registrar_venta(productos):
     print("\nREGISTRAR VENTA")
