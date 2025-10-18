@@ -2,7 +2,7 @@
 # from inventario import *
 # from reportes import *
 # from busquedas_ordenamientos import *
-# from io_archivos import *
+from io_archivos import cargar_desde_csv, guardar_en_csv, exportar_alertas
 
 def mostrar_menu_principal():
     print("\n" + "="*50)
@@ -106,7 +106,7 @@ def busquedas_ordenamientos(productos):
         print("Opción inválida")
 
 def main():
-    productos = []  # TODO: Cargar productos desde CSV
+    productos = cargar_desde_csv()
     
     while True:
         mostrar_menu_principal()
@@ -121,7 +121,8 @@ def main():
         elif opcion == "4":
             busquedas_ordenamientos(productos)
         elif opcion == "5":
-            # TODO: Guardar productos en CSV y binario
+            guardar_en_csv(productos)
+            exportar_alertas(productos)
             print("\n Guardando datos... SALIDA EXITOSA")
             break
         else:
