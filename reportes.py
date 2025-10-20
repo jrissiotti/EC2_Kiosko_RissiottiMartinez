@@ -1,13 +1,3 @@
-ventas_semana = [
-    [0, 0, 0],  # Lunes: mañana, tarde, noche
-    [0, 0, 0],  # Martes
-    [0, 0, 0],  # Miércoles
-    [0, 0, 0],  # Jueves
-    [0, 0, 0],  # Viernes
-    [0, 0, 0],  # Sábado
-    [0, 0, 0]   # Domingo
-]
-
 dias_semana = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"]
 
 def productos_vendidos_hoy(productos):
@@ -51,33 +41,12 @@ def productos_stock_bajo(productos):
         print(f"Producto '{p['nombre']}' - Stock actual: {p['stock']} | Mínimo requerido: {p['stock_minimo']} | Faltan: {p['stock_minimo'] - p['stock']} unidades")
 
 
-def ventas_por_franja_horaria():
-    """
-    Muestra las ventas totales por franja horaria de la semana.
-    Usa la matriz ventas_semana [7 días x 3 franjas].
-    """
-    print("\nVENTAS POR FRANJA HORARIA")
-    print("-" * 50)
-
-    total_mañana = sum(max(0, dia[0]) for dia in ventas_semana)
-    total_tarde = sum(max(0, dia[1]) for dia in ventas_semana)
-    total_noche = sum(max(0, dia[2]) for dia in ventas_semana)
-    total_semana = total_mañana + total_tarde + total_noche
-
-    if total_semana == 0:
-        print("No hay ventas registradas en la semana")
-        return
-
-    print(f"Mañana: Bs{total_mañana} ({(total_mañana/total_semana)*100:.1f}%)")
-    print(f"Tarde:  Bs{total_tarde} ({(total_tarde/total_semana)*100:.1f}%)")
-    print(f"Noche:  Bs{total_noche} ({(total_noche/total_semana)*100:.1f}%)")
-    print(f"Total semanal: Bs{total_semana}")
-
-
-def resumen_semanal():
+def resumen_semanal(ventas_semana):
     """
     Imprime un resumen de ventas de la semana usando la matriz ventas_semana.
     """
+    dias_semana = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"]
+    
     print("\nRESUMEN SEMANAL")
     print("-" * 60)
     print(f"{'Día':<12} {'Mañana':<10} {'Tarde':<10} {'Noche':<10} {'Total':<10}")
@@ -86,16 +55,16 @@ def resumen_semanal():
     totales_mañana = totales_tarde = totales_noche = 0
 
     for i, dia in enumerate(ventas_semana):
-        dia_totales = [max(0, v) for v in dia]
-        total_dia = sum(dia_totales)
-        print(f"{dias_semana[i]:<12} Bs{dia_totales[0]:<8} Bs{dia_totales[1]:<8} Bs{dia_totales[2]:<8} Bs{total_dia:<8}")
-        totales_mañana += dia_totales[0]
-        totales_tarde += dia_totales[1]
-        totales_noche += dia_totales[2]
+        total_dia = sum(dia)
+        print(f"{dias_semana[i]:<12} Bs{dia[0]:<8} Bs{dia[1]:<8} Bs{dia[2]:<8} Bs{total_dia:<8}")
+        totales_mañana += dia[0]
+        totales_tarde += dia[1]
+        totales_noche += dia[2]
 
     total_general = totales_mañana + totales_tarde + totales_noche
     print("-" * 60)
     print(f"{'TOTAL':<12} Bs{totales_mañana:<8} Bs{totales_tarde:<8} Bs{totales_noche:<8} Bs{total_general:<8}")
+
 
 
 def top_3_vendidos(productos):

@@ -1,7 +1,20 @@
 from inventario import agregar_producto, eliminar_producto, modificar_producto, reabastecer_stock, mostrar_productos, pedir_entero
-from reportes import top_3_vendidos, productos_stock_bajo, ventas_por_franja_horaria, resumen_semanal, ticket_promedio
+from reportes import top_3_vendidos, productos_stock_bajo, resumen_semanal, ticket_promedio
 from busquedas_ordenamientos import buscar_por_nombre, buscar_por_codigo, ordenar_por_precio, ordenar_por_nombre, ordenar_por_stock
 from io_archivos import cargar_desde_binario_o_csv, guardar_en_csv, exportar_alertas, guardar_backup_binario
+import datetime
+
+# Matriz global de ventas por semana, que se usara mas adelante
+ventas_semana = [
+    [0, 0, 0],  # Lunes
+    [0, 0, 0],  # Martes
+    [0, 0, 0],  # Miércoles
+    [0, 0, 0],  # Jueves
+    [0, 0, 0],  # Viernes
+    [0, 0, 0],  # Sábado
+    [0, 0, 0]   # Domingo
+]
+dias_semana = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"]
 
 def pedir_opcion(mensaje, min_val, max_val):
     """Pide un número entero dentro de un rango determinado."""
@@ -51,46 +64,80 @@ def gestion_inventario(productos):
     elif opcion == 6:
         return productos
     
-    return productos  # devuelve productos actualizados
+    return productos 
 
 def registrar_venta(productos):
-    """Permite registrar una venta de productos, actualizando stock y vendidos_hoy."""
-    print("\nREGISTRAR VENTA")
+    """
+    Registra una venta que puede incluir varios productos.
+    Cada venta se asigna al día y franja horaria actual.
+    """
+    total_compra = 0
+    venta = []
+
+    hoy = datetime.datetime.today().weekday()
     
-    if not productos:
-        print("No hay productos disponibles.")
+    while True:
+        codigo = input("\nIngrese el código del producto: ").strip()
+        producto = None
+        for p in productos:
+            if p['codigo'] == codigo:
+                producto = p
+                break
+
+        if not producto:
+            print("Código no encontrado.")
+            opcion = input("¿Desea intentar con otro código? si = presione 's', no = presione otra tecla: ").lower()
+            if opcion != 's':
+                break
+            else:
+                continue
+
+        print(f"Producto: {producto['nombre']} - Precio: Bs{producto['precio']} - Stock: {producto['stock']}")
+
+        while True:
+            try:
+                cantidad = int(input("Cantidad a vender: "))
+                if cantidad <= 0:
+                    print("Debe ser mayor a 0.")
+                elif cantidad > producto['stock']:
+                    print(f"No hay suficiente stock disponible (Stock: {producto['stock']})")
+                else:
+                    break
+            except ValueError:
+                print("Debe ingresar un número válido.")
+
+        producto['stock'] -= cantidad
+        producto['vendidos_hoy'] += cantidad
+        subtotal = cantidad * producto['precio']
+        total_compra += subtotal
+        venta.append({'nombre': producto['nombre'], 'cantidad': cantidad, 'subtotal': subtotal})
+
+        hora_actual = datetime.datetime.now().hour
+        if 6 <= hora_actual < 12:
+            franja = 0  # Mañana
+        elif 12 <= hora_actual < 18:
+            franja = 1  # Tarde
+        else:
+            franja = 2  # Noche
+
+        ventas_semana[hoy][franja] += subtotal
+
+
+        continuar = input("¿Desea agregar otro producto a la venta? si = presione 's', no = presione otra tecla: ").lower()
+        if continuar != 's':
+            break
+
+    if not venta:
+        print("\nNo se registró ninguna venta.")
         return productos
-    
-    print("\nPRODUCTOS DISPONIBLES:")
-    print("-" * 60)
-    for i, producto in enumerate(productos, 1):
-        print(f"{i}. {producto['nombre']} - Bs{producto['precio']} - Stock: {producto['stock']}")
-    print("-" * 60)
-    
-    opcion = pedir_opcion("\nSeleccione el número del producto: ", 1, len(productos)) - 1
-    producto = productos[opcion]
-    
-    cantidad = pedir_entero(f"Cantidad de '{producto['nombre']}' a vender: ", min_val=1)
-    
-    if cantidad > producto['stock']:
-        print(f"Stock insuficiente. Solo hay {producto['stock']} unidades")
-        return productos
-    
-    # Procesar venta
-    producto['stock'] -= cantidad
-    producto['vendidos_hoy'] += cantidad
-    total = cantidad * producto['precio']
-    
-    # Mostrar ticket
-    print("\nTICKET DE VENTA:")
-    print("=" * 30)
-    print(f"Producto: {producto['nombre']}")
-    print(f"Cantidad: {cantidad}")
-    print(f"Precio unitario: Bs{producto['precio']}")
-    print(f"TOTAL: Bs{total:.2f}")
-    print("=" * 30)
-    print("Venta registrada exitosamente")
-    
+
+    print("\nTICKET DE COMPRA")
+    print("-" * 40)
+    for item in venta:
+        print(f"{item['nombre']} x{item['cantidad']}  Bs{item['subtotal']:.2f}")
+    print("-" * 40)
+    print(f"TOTAL A PAGAR: Bs{total_compra:.2f}")
+    print("Venta registrada correctamente.")
     return productos
 
 def mostrar_reportes(productos):
@@ -98,10 +145,9 @@ def mostrar_reportes(productos):
     print("\n REPORTES Y ESTADÍSTICAS")
     print("1. Top 3 productos más vendidos del día")
     print("2. Productos con stock bajo")
-    print("3. Ventas por franja horaria")
-    print("4. Resumen semanal")
-    print("5. Ticket promedio del día")
-    print("6. Volver al menú principal")
+    print("3. Resumen semanal")
+    print("4. Ticket promedio del día")
+    print("5. Volver al menú principal")
     
     opcion = pedir_opcion("Seleccione una opción: ", 1, 6)
     
@@ -110,12 +156,10 @@ def mostrar_reportes(productos):
     elif opcion == 2:
         productos_stock_bajo(productos)
     elif opcion == 3:
-        ventas_por_franja_horaria()
+        resumen_semanal(ventas_semana)
     elif opcion == 4:
-        resumen_semanal()
-    elif opcion == 5:
         ticket_promedio(productos)
-    elif opcion == 6:
+    elif opcion == 5:
         return
 
 def busquedas_ordenamientos(productos):
