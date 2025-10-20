@@ -133,7 +133,6 @@ def eliminar_producto(productos):
                     print("Eliminación cancelada.")
                     return productos
         
-        # Si no se encontró el código
         print("No se encontró un producto con ese código.")
         resp = input("¿Desea intentar con otro código? si = presione 's', no = presione otra tecla: ").lower()
         if resp != 's':
@@ -223,7 +222,6 @@ def modificar_producto(productos):
                 print(f"Producto '{producto['nombre']}' modificado correctamente")
                 return productos
         
-        # Si no se encontró el código
         print("No se encontró un producto con ese código.")
         resp = input("¿Desea intentar con otro código? si = presione 's', no = presione otra tecla: ").lower()
         if resp != 's':
@@ -241,7 +239,7 @@ def reabastecer_stock(productos):
     Retorna:
         list: Lista de productos actualizada.
     """
-    print("\n📦 REABASTECER STOCK")
+    print("\nREABASTECER STOCK")
     while True:
         mostrar_productos(productos)
         
@@ -266,7 +264,6 @@ def reabastecer_stock(productos):
         producto_encontrado['stock'] += cantidad
         print(f"Stock de '{producto_encontrado['nombre']}' actualizado: {stock_anterior} a {producto_encontrado['stock']}")
         
-        # Preguntar si desea reabastecer otro producto
         opcion = input("¿Desea reabastecer otro producto? si = presione 's', no = presione otra tecla: ").lower()
         if opcion != 's':
             break
