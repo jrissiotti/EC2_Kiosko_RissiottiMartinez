@@ -1,26 +1,5 @@
 dias_semana = ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"]
 
-def productos_vendidos_hoy(productos):
-    """
-    Muestra los productos vendidos hoy.
-
-    Parámetros:
-        productos (list[dict]): Lista de productos con clave 'vendidos_hoy'.
-    """
-    print("\nPRODUCTOS VENDIDOS HOY")
-    print("-" * 50)
-
-    vendidos = [p for p in productos if p.get('vendidos_hoy', 0) > 0]
-    
-    if not vendidos:
-        print("No se registraron ventas hoy")
-        return
-    
-    for p in vendidos:
-        total = p['vendidos_hoy'] * p['precio']
-        print(f"{p['nombre']} - Vendidos: {p['vendidos_hoy']} - Total: Bs{total:.2f}")
-
-
 def productos_stock_bajo(productos):
     """
     Muestra los productos cuyo stock es menor al mínimo requerido.

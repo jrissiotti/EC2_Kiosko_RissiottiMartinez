@@ -64,27 +64,53 @@ def buscar_por_codigo(productos, codigo_buscar):
 
 
 def ordenar_por_precio(productos):
-    """Muestra los productos ordenados por precio ascendente (menor a mayor)"""
+    """Ordena y muestra los productos por precio (menor a mayor) usando burbuja"""
     print("\nORDENANDO POR PRECIO (MENOR A MAYOR)")
     print("-" * 60)
 
-    for p in sorted(productos, key=lambda x: x['precio']):
+    lista = productos.copy()
+    n = len(lista)
+    
+    for i in range(n):
+        for j in range(0, n - i - 1):
+            if lista[j]['precio'] > lista[j + 1]['precio']:
+                lista[j], lista[j + 1] = lista[j + 1], lista[j]
+    
+    for p in lista:
         print(f"Bs{p['precio']:<6} | {p['nombre']}")
 
 
 def ordenar_por_nombre(productos):
-    """Muestra los productos ordenados por nombre (A-Z)"""
+    """Ordena y muestra los productos por nombre (A-Z) usando selección"""
     print("\nORDENANDO POR NOMBRE (A-Z)")
     print("-" * 60)
 
-    for p in sorted(productos, key=lambda x: x['nombre']):
+    lista = productos.copy()
+    n = len(lista)
+
+    for i in range(n):
+        min_idx = i
+        for j in range(i + 1, n):
+            if lista[j]['nombre'] < lista[min_idx]['nombre']:
+                min_idx = j
+        lista[i], lista[min_idx] = lista[min_idx], lista[i]
+
+    for p in lista:
         print(f"{p['nombre']}")
 
 
 def ordenar_por_stock(productos):
-    """Muestra los productos ordenados por stock descendente (mayor a menor)"""
-    print("\nORDENANDO POR STOCK (MAYOR A MENOR)")
+    """Ordena y muestra los productos por stock (menor a mayor) usando burbuja"""
+    print("\nORDENANDO POR STOCK (MENOR A MAYOR)")
     print("-" * 60)
 
-    for p in sorted(productos, key=lambda x: x['stock'], reverse=True):
+    lista = productos.copy()
+    n = len(lista)
+
+    for i in range(n):
+        for j in range(0, n - i - 1):
+            if lista[j]['stock'] > lista[j + 1]['stock']:
+                lista[j], lista[j + 1] = lista[j + 1], lista[j]
+
+    for p in lista:
         print(f"Stock: {p['stock']:<3} | {p['nombre']}")

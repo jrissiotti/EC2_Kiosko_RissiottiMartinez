@@ -1,4 +1,4 @@
-from inventario import agregar_producto, eliminar_producto, modificar_producto, reabastecer_stock, mostrar_productos, pedir_entero
+from inventario import agregar_producto, eliminar_producto, modificar_producto, reabastecer_stock, mostrar_productos
 from reportes import top_3_vendidos, productos_stock_bajo, resumen_semanal, ticket_promedio
 from busquedas_ordenamientos import buscar_por_nombre, buscar_por_codigo, ordenar_por_precio, ordenar_por_nombre, ordenar_por_stock
 from io_archivos import cargar_desde_binario_o_csv, guardar_en_csv, exportar_alertas, guardar_backup_binario
@@ -73,7 +73,7 @@ def registrar_venta(productos):
     """
     total_compra = 0
     venta = []
-
+    mostrar_productos(productos)
     hoy = datetime.datetime.today().weekday()
     
     while True:
@@ -149,7 +149,7 @@ def mostrar_reportes(productos):
     print("4. Ticket promedio del día")
     print("5. Volver al menú principal")
     
-    opcion = pedir_opcion("Seleccione una opción: ", 1, 6)
+    opcion = pedir_opcion("Seleccione una opción: ", 1, 5)
     
     if opcion == 1:
         top_3_vendidos(productos)
